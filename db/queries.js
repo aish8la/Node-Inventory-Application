@@ -10,3 +10,17 @@ async function addCategory({ categoryName, categoryFor, isProtected = false}) {
     };
     await pool.query(addCategorySQL);
 }
+
+async function getAllCategories() {
+    const viewCategorySQL = `SELECT ct.category_id, ct.category_name, cmt.cat_mapped_to, ct.is_protected
+                                FROM categories AS ct 
+                                LEFT OUTER JOIN category_map AS cmt 
+                                ON ct.category_for = cmt.cat_map_id;`
+    const result = await pool.query(viewCategorySQL);
+    return result.rows
+}
+
+module.exports = {
+    addCategory,
+    getAllCategories,
+};
