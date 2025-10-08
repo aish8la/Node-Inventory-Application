@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fab Inventory | New Category</title>
+</head>
+<body>
+    <form action="/category/new" method="POST">
+        <% if (locals.category) { %>
+            <label for="category-name">Category Name</label>
+            <input type="text" name="categoryName" id="category-name" value="<%=category.category_name%>" required>
+            <label for="category-type">Category Type</label>
+            <input type="text" name="categoryType" id="category-type" value="<%=category.cat_mapped_to%>" required>
+            <label for="is-protected">Protected</label>
+            <input type="checkbox" value="true" id="is-protected" name="isProtected" <%= category.is_protected ? 'checked'  : '' %>>
+        <% } else { %>
+            <label for="category-name">Category Name</label>
+            <input type="text" name="categoryName" id="category-name">
+            <label for="category-type">Category Type</label>
+            <input type="text" name="categoryType" id="category-type">
+            <label for="is-protected">Protected</label>
+            <input type="checkbox" value="true" id="is-protected" name="isProtected" checked>
+            <button type="submit">Submit</button>
+        <% } %>
+    </form>
+</body>
+</html>
