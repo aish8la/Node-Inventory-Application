@@ -9,9 +9,12 @@
     <% if (locals.categories) { %>
         <ul>
             <%categories.map(category => { %>
-                <li><%= category.category_name %></li>
+                <li><%= category.category_name %>
+                    <a href="/category/<%=category.category_id%>">Edit</a>
+                </li>
             <% }); %>
         </ul>
     <% } %>
+    <a href="/category/new">Add</a>
 </body>
 </html>
