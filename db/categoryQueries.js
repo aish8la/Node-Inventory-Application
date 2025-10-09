@@ -3,17 +3,18 @@ const db = require('./index');
 async function addCategory({ categoryName, categoryFor, isProtected = false}) {
     const addCategorySQL = {
         text: `INSERT INTO categories (category_name, category_for, is_protected)
-                SELECT $1, cat_map_id, $3
-                FROM category_map
-                WHERE cat_mapped_to=$2
-               RETURNING category_id;`,
+                VALUES ($1, $2, $3);`,
         values: [categoryName, categoryFor, isProtected]
     };
-    const result = await db.query(addCategorySQL);
-    if (result.rowCount === 0) {
-        throw new Error("insert failed");//TODO use a better error
+    try {
+        const result = await db.query(addCategorySQL);
+        return result;
+    } catch (error) {
+        if(error.code === '23503') {
+            throw new Error('Invalid category type');
+        }
+        throw error; //TODO add better errors
     }
-    return result;
 }
 
 async function getAllCategories() {
@@ -26,7 +27,7 @@ async function getAllCategories() {
 }
 
 async function getAllCategoryTypes() {
-    const getCategoryTypes = `SELECT cat_mapped_to
+    const getCategoryTypes = `SELECT cat_map_id, cat_mapped_to
                                 FROM cat_map_id;`
     const result = await db.query(getCategoryTypes);
     return result;
