@@ -1,0 +1,16 @@
+const { body, matchedData, validationResult } = require('express-validator');
+
+const validateCategoryAddEdit = [
+    body('categoryName')
+        .trim()
+        .escape()
+        .notEmpty().withMessage('Category Name cannot be empty')
+        .isLength({min: 1, max: 50}).withMessage('Category name must be between 1 to 50 characters long'),
+    body('categoryType')
+        .trim()
+        .escape()
+        .notEmpty().withMessage('Category Type cannot be empty')
+        .isLength({min: 1, max: 50}).withMessage('Category type must be between 1 to 50 characters long')
+];
+
+module.exports = validateCategoryAddEdit;
