@@ -14,7 +14,8 @@ function newCategoryGet(req, res) {
 const newCategoryPost = [
     validateCategoryAddEdit,
     async (req, res) => {
-        const { categoryName, categoryType, isProtected = false } = matchedData(req);
+        const { categoryName, categoryType } = matchedData(req);
+        const isProtected = req.body.isProtected ? true : false;
         const result = await db.addCategory({ categoryName: categoryName, categoryFor: categoryType, isProtected: isProtected });
         res.redirect('/category');
     }
