@@ -25,7 +25,15 @@ async function getAllCategories() {
     return result.rows
 }
 
+async function getAllCategoryTypes() {
+    const getCategoryTypes = `SELECT cat_mapped_to
+                                FROM cat_map_id;`
+    const result = await db.query(getCategoryTypes);
+    return result;
+}
+
 module.exports = {
     addCategory,
     getAllCategories,
+    getAllCategoryTypes,
 };
