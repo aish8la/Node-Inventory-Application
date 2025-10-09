@@ -1,4 +1,4 @@
-const pool = require('./pool');
+const db = require('./index');
 
 async function addCategory({ categoryName, categoryFor, isProtected = false}) {
     const addCategorySQL = {
@@ -8,7 +8,7 @@ async function addCategory({ categoryName, categoryFor, isProtected = false}) {
                 WHERE cat_mapped_to=$2;`,
         values: [categoryName, categoryFor, isProtected]
     };
-    await pool.query(addCategorySQL);
+    await db.query(addCategorySQL);
 }
 
 async function getAllCategories() {
@@ -16,7 +16,7 @@ async function getAllCategories() {
                                 FROM categories AS ct 
                                 LEFT OUTER JOIN category_map AS cmt 
                                 ON ct.category_for = cmt.cat_map_id;`
-    const result = await pool.query(viewCategorySQL);
+    const result = await db.query(viewCategorySQL);
     return result.rows
 }
 
