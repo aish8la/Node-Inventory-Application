@@ -5,10 +5,15 @@ async function addCategory({ categoryName, categoryFor, isProtected = false}) {
         text: `INSERT INTO categories (category_name, category_for, is_protected)
                 SELECT $1, cat_map_id, $3
                 FROM category_map
-                WHERE cat_mapped_to=$2;`,
+                WHERE cat_mapped_to=$2
+               RETURNING category_id;`,
         values: [categoryName, categoryFor, isProtected]
     };
-    await db.query(addCategorySQL);
+    const result = await db.query(addCategorySQL);
+    if (result.rowCount === 0) {
+        throw new Error("insert failed");//TODO use a better error
+    }
+    return result;
 }
 
 async function getAllCategories() {
