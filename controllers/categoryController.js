@@ -1,4 +1,4 @@
-const db = require('../db/queries');
+const db = require('../db/categoryQueries');
 
 async function categoryGet(req, res) {
     const categories = await db.getAllCategories();
