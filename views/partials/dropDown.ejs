@@ -1,0 +1,8 @@
+<% if( options ) { %>
+<label for="<%= id %>">Category Type</label>
+<select name="<%= name %>" id="<%= id %>">
+    <% options.map(option => { %>
+        <option value="<%= option.cat_map_id %>"><%= option.cat_mapped_to %></option>
+    <% }); %>
+</select>
+<% } %>
