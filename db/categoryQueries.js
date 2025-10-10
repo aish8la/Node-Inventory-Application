@@ -10,10 +10,7 @@ async function addCategory({ categoryName, categoryFor, isProtected = false}) {
         const result = await db.query(addCategorySQL);
         return result;
     } catch (error) {
-        if(error.code === '23503') {
-            throw new Error('Invalid category type');
-        }
-        throw error; //TODO add better errors
+        throw error;
     }
 }
 
