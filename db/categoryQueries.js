@@ -30,8 +30,22 @@ async function getAllCategoryTypes() {
     return result;
 }
 
+async function getCategoryById(id) {
+    const getCategory = { 
+        text: `SELECT ct.category_id, ct.category_name, cmt.cat_map_id, cmt.cat_mapped_to, ct.is_protected
+                FROM categories AS ct 
+                LEFT OUTER JOIN category_map AS cmt 
+                ON ct.category_for = cmt.cat_map_id
+                WHERE ct.category_id=$1;`,
+        values: [id]
+    };
+    const result = await db.query(getCategory)
+    return result.rows;
+}
+
 module.exports = {
     addCategory,
     getAllCategories,
     getAllCategoryTypes,
+    getCategoryById,
 };
