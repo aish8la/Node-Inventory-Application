@@ -13,15 +13,17 @@
         <% if (locals.category) { %>
             <label for="category-name">Category Name</label>
             <input type="text" name="categoryName" id="category-name" value="<%=category.category_name%>">
-            <label for="category-type">Category Type</label>
-            <input type="text" name="categoryType" id="category-type" value="<%=category.cat_mapped_to%>">
+            <% if (locals.categoryTypes) { %>
+                <%- include("../partials/dropdown.ejs", { options: categoryTypes, name: "categoryType", id: "category-type" }) %>
+            <% } %>
             <label for="is-protected">Protected</label>
             <input type="checkbox" value="true" id="is-protected" name="isProtected" <%= category.is_protected ? 'checked'  : '' %>>
         <% } else { %>
             <label for="category-name">Category Name</label>
             <input type="text" name="categoryName" id="category-name">
-            <label for="category-type">Category Type</label>
-            <input type="text" name="categoryType" id="category-type">
+            <% if (locals.categoryTypes) { %>
+                <%- include("../partials/dropDown.ejs", { options: categoryTypes, name: "categoryType", id: "category-type" }) %>
+            <% } %>
             <label for="is-protected">Protected</label>
             <input type="checkbox" value="true" id="is-protected" name="isProtected" checked>
             <button type="submit">Submit</button>
