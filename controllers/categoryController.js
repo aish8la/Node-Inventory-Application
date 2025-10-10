@@ -25,8 +25,20 @@ async function newCategoryPost(req, res) {
     res.redirect('/category');
 }
 
+async function editCategoryGet(req, res) {
+    const { categoryId } = req.params;
+    const categoryData = await db.getCategoryById(categoryId);
+    const categoryTypes = await db.getAllCategoryTypes();
+    res.render('category/form', {
+        mode: 'edit',
+        category: categoryData[0],
+        categoryTypes: categoryTypes.rows
+    });
+}
+
 module.exports = {
     categoryGet,
     newCategoryGet,
     newCategoryPost,
+    editCategoryGet,
 };
