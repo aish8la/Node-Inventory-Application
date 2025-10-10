@@ -10,7 +10,7 @@
         <ul>
             <%categories.map(category => { %>
                 <li><%= category.category_name %>
-                    <a href="/category/<%=category.category_id%>">Edit</a>
+                    <a href="<%= '/category/' +  category.category_id  + '/edit' %>">Edit</a>
                 </li>
             <% }); %>
         </ul>
