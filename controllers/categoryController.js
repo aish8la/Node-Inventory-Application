@@ -1,6 +1,5 @@
 const { matchedData } = require('express-validator');
 const db = require('../db/categoryQueries');
-const validateCategoryAddEdit = require('./validation/categoryFormValidators');
 
 async function categoryGet(req, res) {
     const categories = await db.getAllCategories();
@@ -12,15 +11,19 @@ async function newCategoryGet(req, res) {
     res.render('category/form', { categoryTypes: categoryTypes.rows });
 }
 
-const newCategoryPost = [
-    validateCategoryAddEdit,
-    async (req, res) => {
-        const { categoryName, categoryType } = matchedData(req);
-        const isProtected = req.body.isProtected ? true : false;
-        const result = await db.addCategory({ categoryName: categoryName, categoryFor: categoryType, isProtected: isProtected });
-        res.redirect('/category');
+async function newCategoryPost(req, res) {
+    const categoryTypes = await db.getAllCategoryTypes();
+    if (res.validationErrors) {
+        return res.render('category/form', {
+            errors: res.validationErrors,
+            categoryTypes: categoryTypes.rows,
+        });
     }
-]
+    const { categoryName, categoryType } = matchedData(req);
+    const isProtected = req.body.isProtected ? true : false;
+    await db.addCategory({ categoryName: categoryName, categoryFor: categoryType, isProtected: isProtected });
+    res.redirect('/category');
+}
 
 module.exports = {
     categoryGet,
