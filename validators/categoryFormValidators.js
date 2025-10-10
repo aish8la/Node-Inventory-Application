@@ -1,7 +1,6 @@
 const { body } = require('express-validator');
-const { handleInputFormErr } = require('./validationHelpers');
 
-const validateCategoryAddEdit = [
+const categoryAddEditValidation = [
     body('categoryName')
         .trim()
         .escape()
@@ -12,7 +11,6 @@ const validateCategoryAddEdit = [
         .escape()
         .notEmpty().withMessage('Category Type cannot be empty')
         .isLength({min: 1, max: 50}).withMessage('Category type must be between 1 to 50 characters long'),
-    handleInputFormErr('category/form'),
 ];
 
-module.exports = validateCategoryAddEdit;
+module.exports = categoryAddEditValidation;

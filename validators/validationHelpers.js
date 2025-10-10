@@ -1,15 +1,14 @@
 const { validationResult } = require('express-validator');
 
-function handleInputFormErr(ejsTemplate) {
-    return (req, res, next) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.render(ejsTemplate, { errors: errors.array() });
-        }
-        next();
+function validate(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.validationErrors = errors.array();
+        return next();
     }
+    next();
 }
 
 module.exports = {
-    handleInputFormErr,
+    validate,
 };
