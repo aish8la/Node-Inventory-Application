@@ -4,6 +4,7 @@ const app = express();
 const path = require('node:path');
 const indexRouter = require('./router/indexRouter');
 const categoryRouter = require('./router/categoryRouter');
+const errorMiddleware = require('./controllers/errorMiddleware');
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -11,6 +12,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/', indexRouter);
 app.use('/category', categoryRouter);
+app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
