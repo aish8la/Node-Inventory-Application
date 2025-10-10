@@ -15,7 +15,7 @@ async function addCategory({ categoryName, categoryFor, isProtected = false}) {
 }
 
 async function getAllCategories() {
-    const viewCategorySQL = `SELECT ct.category_id, ct.category_name, cmt.cat_mapped_to, ct.is_protected
+    const viewCategorySQL = `SELECT ct.category_id, ct.category_name, ct.category_for, cmt.cat_mapped_to, ct.is_protected
                                 FROM categories AS ct 
                                 LEFT OUTER JOIN category_map AS cmt 
                                 ON ct.category_for = cmt.cat_map_id;`
@@ -32,7 +32,7 @@ async function getAllCategoryTypes() {
 
 async function getCategoryById(id) {
     const getCategory = { 
-        text: `SELECT ct.category_id, ct.category_name, cmt.cat_map_id, cmt.cat_mapped_to, ct.is_protected
+        text: `SELECT ct.category_id, ct.category_name, ct.category_for, cmt.cat_mapped_to, ct.is_protected
                 FROM categories AS ct 
                 LEFT OUTER JOIN category_map AS cmt 
                 ON ct.category_for = cmt.cat_map_id
