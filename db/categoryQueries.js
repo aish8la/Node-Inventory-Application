@@ -28,7 +28,7 @@ async function getAllCategories() {
 
 async function getAllCategoryTypes() {
     const getCategoryTypes = `SELECT cat_map_id, cat_mapped_to
-                                FROM cat_map_id;`
+                                FROM category_map;`
     const result = await db.query(getCategoryTypes);
     return result;
 }
