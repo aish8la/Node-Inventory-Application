@@ -8,15 +8,21 @@ async function categoryGet(req, res) {
 
 async function newCategoryGet(req, res) {
     const categoryTypes = await db.getAllCategoryTypes();
-    res.render('category/form', { categoryTypes: categoryTypes.rows });
+    res.render('category/form', {
+        categoryTypes: categoryTypes.rows,
+        mode: 'new',
+        category: {}
+    });
 }
 
 async function newCategoryPost(req, res) {
     const categoryTypes = await db.getAllCategoryTypes();
     if (res.validationErrors) {
         return res.render('category/form', {
+            mode: 'new',
             errors: res.validationErrors,
             categoryTypes: categoryTypes.rows,
+            category: {}
         });
     }
     const { categoryName, categoryType } = matchedData(req);
