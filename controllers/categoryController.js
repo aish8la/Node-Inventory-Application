@@ -7,8 +7,9 @@ async function categoryGet(req, res) {
     res.render('category/list', { title: 'Fab Inventory | Categories', categories: categories});
 }
 
-function newCategoryGet(req, res) {
-    res.render('category/form');
+async function newCategoryGet(req, res) {
+    const categoryTypes = await db.getAllCategoryTypes();
+    res.render('category/form', { categoryTypes: categoryTypes.rows });
 }
 
 const newCategoryPost = [
