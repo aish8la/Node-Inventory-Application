@@ -43,9 +43,20 @@ async function getCategoryById(id) {
     return result.rows;
 }
 
+async function editCategory({ categoryId, categoryName, categoryTypeId, isProtected }) {
+    const editCategory = {
+        text: `UPDATE categories 
+                SET category_name = $1, category_for = $2, is_protected = $3
+                WHERE category_id = $4;`,
+        values: [categoryName, categoryTypeId, isProtected, categoryId],
+    };
+    return await db.query(editCategory);
+}
+
 module.exports = {
     addCategory,
     getAllCategories,
     getAllCategoryTypes,
     getCategoryById,
+    editCategory,
 };
