@@ -8,9 +8,8 @@ const categoryAddEditValidation = [
         .isLength({min: 1, max: 50}).withMessage('Category name must be between 1 to 50 characters long'),
     body('categoryType')
         .trim()
-        .escape()
-        .notEmpty().withMessage('Category Type cannot be empty')
-        .isLength({min: 1, max: 50}).withMessage('Category type must be between 1 to 50 characters long'),
+        .isInt()
+        .notEmpty().withMessage('Category Type cannot be empty'),
 ];
 
 module.exports = categoryAddEditValidation;
