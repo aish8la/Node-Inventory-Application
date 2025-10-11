@@ -60,10 +60,17 @@ async function editCategoryPost(req, res) {
     res.redirect('/category');
 }
 
+async function deleteCategoryPost(req, res) {
+    const { categoryId } = req.params;
+    await db.deleteCategory(categoryId);
+    res.redirect('/category');
+}
+
 module.exports = {
     categoryGet,
     newCategoryGet,
     newCategoryPost,
     editCategoryGet,
     editCategoryPost,
+    deleteCategoryPost,
 };
