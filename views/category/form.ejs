@@ -10,6 +10,9 @@
         <% if (locals.errors) { %>
             <%- include("../partials/formErrors.ejs", { errors: errors }) %>
         <% } %>
+        <% if (mode === 'edit') { %> 
+            <input type="hidden" id="categoryId" name="categoryId" value="<%= category.category_id %>">
+        <% } %>
         <label for="category-name">Category Name</label>
         <input type="text" name="categoryName" id="category-name" value="<%= mode === 'edit' ? category.category_name : '' %>">
         <% if( locals.categoryTypes ) { %>
