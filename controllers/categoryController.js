@@ -42,9 +42,28 @@ async function editCategoryGet(req, res) {
     });
 }
 
+async function editCategoryPost(req, res) {
+    const { categoryId } = req.params;
+    const categoryTypes = await db.getAllCategoryTypes();
+    const categoryData = await db.getCategoryById(categoryId);
+    if (res.validationErrors) {
+        return res.render('category/form', {
+            mode: 'edit',
+            errors: res.validationErrors,
+            categoryTypes: categoryTypes.rows,
+            category: categoryData,
+        });
+    }
+    const { categoryName, categoryType } = matchedData(req);
+    const isProtected = req.body.isProtected ? true : false;
+    await db.editCategory({ categoryId: categoryId, categoryName: categoryName, categoryTypeId: categoryType, isProtected: isProtected});
+    res.redirect('/category');
+}
+
 module.exports = {
     categoryGet,
     newCategoryGet,
     newCategoryPost,
     editCategoryGet,
+    editCategoryPost,
 };
