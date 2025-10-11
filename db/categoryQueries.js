@@ -53,10 +53,21 @@ async function editCategory({ categoryId, categoryName, categoryTypeId, isProtec
     return await db.query(editCategory);
 }
 
+async function deleteCategory(id) {
+    const deleteCategory = {
+        text: `DELETE FROM categories
+                WHERE category_id = $1;`,
+        values: [id],
+    };
+    const result = await db.query(deleteCategory);
+    return result;
+}
+
 module.exports = {
     addCategory,
     getAllCategories,
     getAllCategoryTypes,
     getCategoryById,
     editCategory,
+    deleteCategory,
 };
