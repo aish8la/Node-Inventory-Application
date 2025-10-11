@@ -10,5 +10,6 @@ categoryRouter.get('/new',categoryController.newCategoryGet);
 categoryRouter.post('/new', categoryAddEditValidation, validate, categoryController.newCategoryPost);
 categoryRouter.get('/:categoryId/edit', categoryController.editCategoryGet);
 categoryRouter.post('/:categoryId/edit', categoryAddEditValidation, categoryOpAuth, categoryController.editCategoryPost);
+categoryRouter.get('/:categoryId/delete', categoryController.deleteCategoryGet);
 
 module.exports = categoryRouter;

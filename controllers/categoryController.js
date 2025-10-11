@@ -66,6 +66,17 @@ async function deleteCategoryPost(req, res) {
     res.redirect('/category');
 }
 
+async function deleteCategoryGet(req, res) {
+    const { categoryId } = req.params;
+    const categoryData = await db.getCategoryById(categoryId);
+    res.render('confirmDelete', {
+        title: 'Fab Inventory | Delete Category',
+        path: req.baseUrl + '/' + categoryId + '/delete',
+        message: `Delete Category "${categoryData[0].category_name}"`,
+        isProtected: categoryData[0].is_protected,
+    });
+}
+
 module.exports = {
     categoryGet,
     newCategoryGet,
@@ -73,4 +84,5 @@ module.exports = {
     editCategoryGet,
     editCategoryPost,
     deleteCategoryPost,
+    deleteCategoryGet,
 };
