@@ -34,6 +34,48 @@ async function getAllMaterials() {
     return finalArr
 }
 
+async function addMaterial({ materialName, materialDescription, isProtected, stockInHand, categoriesId = [] }) {
+    const materialInsertSQL = {
+        text: `INSERT INTO materials (material_name, material_description, is_protected, stock_in_hand)
+                VALUES ($1, $2, $3, $4)
+                RETURNING material_id;`,
+        values: [materialName, materialDescription, isProtected, stockInHand],
+    };
+
+    const categoryInsertSQL = {
+        name: 'insert-categories',
+        text: `INSERT INTO material_categories (material_id, category_id)
+                SELECT $1, c.category_id
+                FROM categories c
+                JOIN category_map cm
+                ON c.category_for = cm.cat_map_id
+                WHERE cm.cat_mapped_to = 'Material' AND c.category_id = $2;`,
+        values: []
+    }
+
+    const uniqueCategoryIds = [... new Set(categoriesId)];
+
+    const client = await db.getClient();
+
+    try {
+        await client.query('BEGIN');
+        const insertResult = await client.query(materialInsertSQL);
+        if (insertResult.rowCount === 0) throw new Error('Failed to add material');
+        const materialId = insertResult.rows[0].material_id;
+        for (const categoryId of uniqueCategoryIds) {
+            categoryInsertSQL.values = [materialId, categoryId]
+            const result = await client.query(categoryInsertSQL);
+            if (result.rowCount === 0) throw new Error('Failed to add category to material');
+        }
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+}
+
 module.exports = {
     getAllMaterials,
 }
