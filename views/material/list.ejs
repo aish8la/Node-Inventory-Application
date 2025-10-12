@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <% if (locals.materials) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Material Name</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Categories</th>
+                    <th>Protected</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%materials.map(material => { %>
+                    <tr>
+                        <td><%= material.material_name %></td>
+                        <td><%= material.material_description %></td>
+                        <td><%= material.stock_in_hand %></td>
+                        <td>
+                            <% material.categories.map(category => { %>
+                                <a href="#"><%= category.category_name%></a>
+                            <% }) %>
+                        </td>
+                        <td><%= material.is_protected %></td>
+                        <td><a href="<%= '/material/' +  material.material_id  + '/edit' %>">Edit</a></td>
+                        <td><a href="<%= '/material/' +  material.material_id  + '/delete' %>">Delete</a></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } %>
+    <a href="/material/new">Add</a>
+</body>
+</html>
