@@ -9,6 +9,11 @@ async function query(queryConfig = {}) {
     return result;
 }
 
+async function getClient() {
+    return await pool.connect();
+}
+
 module.exports = {
     query,
+    getClient,
 };
