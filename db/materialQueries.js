@@ -49,7 +49,7 @@ async function addMaterial({ materialName, materialDescription, isProtected, sto
                 FROM categories c
                 JOIN category_map cm
                 ON c.category_for = cm.cat_map_id
-                WHERE cm.cat_mapped_to = 'Material' AND c.category_id = $2;`,
+                WHERE cm.cat_mapped_to = 'Material' AND c.category_id = ANY($2::int[]);`,
         values: []
     }
 
@@ -62,10 +62,14 @@ async function addMaterial({ materialName, materialDescription, isProtected, sto
         const insertResult = await client.query(materialInsertSQL);
         if (insertResult.rowCount === 0) throw new Error('Failed to add material');
         const materialId = insertResult.rows[0].material_id;
-        for (const categoryId of uniqueCategoryIds) {
-            categoryInsertSQL.values = [materialId, categoryId]
-            const result = await client.query(categoryInsertSQL);
-            if (result.rowCount === 0) throw new Error('Failed to add category to material');
+
+        if (uniqueCategoryIds.length > 0) {
+            categoryInsertSQL.values[0](materialId);
+            categoryInsertSQL.values[1](uniqueCategoryIds);
+            const categoryResult = await client.query(categoryInsertSQL);
+            if (categoryResult.rowCount !== uniqueCategoryIds.length) {
+                throw new Error('Failed to add category to material');
+            }
         }
         await client.query('COMMIT');
     } catch (error) {
