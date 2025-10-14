@@ -14,6 +14,7 @@ async function newMaterialGet(req, res) {
         categoryList,
     };
     res.render('material/form', {
+        subtitle: 'Fab Inventory | New Material',
         mode: 'new',
         formData,
     });
