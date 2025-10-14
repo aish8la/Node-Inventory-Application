@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fab Inventory | <%= subtitle %></title>
+</head>
+<body>
+    <form action="<%= mode === 'edit' ? '/material/' + formData.material_id + '/edit' : '/material/new' %>" method="POST">
+        <%- include("../partials/formErrors.ejs") %>
+        <% if (mode === 'edit') { %> 
+            <input type="hidden" id="materialId" name="materialId" value="<%= formData.material_id %>">
+        <% } %>
+        <label for="material-name">Material Name</label>
+        <input type="text" name="materialName" id="material-name" value="<%= mode === 'edit' ? formData.material_name : '' %>">
+        <% if( formData.categoryList ) { %>
+            <label for="categories">Categories</label>
+            <select name="categories" id="categories" multiple>
+                <% formData.categoryList.forEach(option => { %>
+                    <option value="<%= option.category_id %>">
+                    <%= option.category_name %></option>
+                <% }); %>
+            </select>
+        <% } %>
+        <label for="is-protected">Protected</label>
+        <input type="checkbox" value="true" id="is-protected" name="isProtected" <%= formData.is_protected ? 'checked'  : '' %>>
+        <% if ( mode === 'edit' && formData.is_protected ) { %>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+        <% } %>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
