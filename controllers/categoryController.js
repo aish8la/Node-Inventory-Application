@@ -20,7 +20,7 @@ async function newCategoryPost(req, res) {
     if (res.validationErrors) {
         return res.render('category/form', {
             mode: 'new',
-            errors: res.validationErrors,
+            formErrors: res.validationErrors,
             categoryTypes: categoryTypes.rows,
             category: {}
         });
@@ -49,7 +49,7 @@ async function editCategoryPost(req, res) {
     if (res.validationErrors) {
         return res.render('category/form', {
             mode: 'edit',
-            errors: res.validationErrors,
+            formErrors: res.validationErrors,
             categoryTypes: categoryTypes.rows,
             category: categoryData[0],
         });

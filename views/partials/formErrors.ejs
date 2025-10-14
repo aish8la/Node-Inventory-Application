@@ -1,6 +1,6 @@
-<% if( locals.errors ) { %>
+<% if( locals.formErrors ) { %>
 <ul>
-    <% errors.map(err => { %>
+    <% formErrors.errorArray.map(err => { %>
         <li><%= err.msg %></li>
     <% }); %>
 </ul>    

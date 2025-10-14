@@ -7,9 +7,7 @@
 </head>
 <body>
     <form action="<%= mode === 'edit' ? '/category/' + category.category_id + '/edit' : '/category/new' %>" method="POST">
-        <% if (locals.errors) { %>
-            <%- include("../partials/formErrors.ejs", { errors: errors }) %>
-        <% } %>
+        <%- include("../partials/formErrors.ejs") %>
         <% if (mode === 'edit') { %> 
             <input type="hidden" id="categoryId" name="categoryId" value="<%= category.category_id %>">
         <% } %>
