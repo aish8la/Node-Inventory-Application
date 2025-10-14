@@ -8,6 +8,18 @@ async function materialsGet(req, res) {
     });
 }
 
+async function newMaterialGet(req, res) {
+    const categoryList = await db.getMaterialCategories();
+    const formData = {
+        categoryList,
+    };
+    res.render('material/form', {
+        mode: 'new',
+        formData,
+    });
+}
+
 module.exports = {
     materialsGet,
+    newMaterialGet,
 };
