@@ -80,6 +80,18 @@ async function addMaterial({ materialName, materialDescription, isProtected, sto
     }
 }
 
+async function getMaterialCategories() {
+    const SQL = `
+    SELECT c.category_id, c.category_name
+        FROM categories c
+        JOIN category_map cm
+            ON c.category_for = cm.cat_map_id
+        WHERE cm.cat_mapped_to = 'Material';`;
+    const result = await db.query(SQL);
+    return result.rows;
+}
+
 module.exports = {
     getAllMaterials,
+    getMaterialCategories,
 }
