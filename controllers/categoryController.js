@@ -51,7 +51,7 @@ async function editCategoryPost(req, res) {
             mode: 'edit',
             errors: res.validationErrors,
             categoryTypes: categoryTypes.rows,
-            category: categoryData,
+            category: categoryData[0],
         });
     }
     const { categoryName, categoryType } = matchedData(req);
