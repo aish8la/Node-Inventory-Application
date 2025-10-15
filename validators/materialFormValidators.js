@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, param } = require('express-validator');
 
 const addValidation = [
     body('materialName')
@@ -18,6 +18,12 @@ const addValidation = [
         .toBoolean()
 ];
 
+const paramValidation = [
+    param('materialId')
+        .isInt().withMessage("Material Id must be an integer"),
+]
+
 module.exports = {
     addValidation,
+    paramValidation,
 };

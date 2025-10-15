@@ -50,7 +50,8 @@ async function newMaterialPost(req, res) {
 }
 
 async function editMaterialGet(req, res) {
-    const { materialId } = req.params;
+    const { materialId } = matchedData(req, { locations: ['params'] });
+    if (!materialId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
     const materialData = await db.getMaterialById(materialId);
     if (!materialData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
     const categoryList = await db.getMaterialCategories();
