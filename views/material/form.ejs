@@ -17,7 +17,7 @@
         <input type="text" name="materialDescription" id="material-description" value="<%= mode === 'edit' ? formData.material_description : '' %>">
         <% if( formData.categoryList ) { %>
             <label for="categories">Categories</label>
-            <select name="categories" id="categories" multiple>
+            <select name="categoriesId[]" id="categories" multiple>
                 <% formData.categoryList.forEach(option => { %>
                     <option value="<%= option.category_id %>">
                     <%= option.category_name %></option>
