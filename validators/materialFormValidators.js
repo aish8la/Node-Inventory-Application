@@ -8,8 +8,7 @@ const addValidation = [
         .isLength({min: 1, max: 50}).withMessage('Material name must be between 1 to 50 characters long'),
     body('materialDescription')
         .trim()
-        .isInt()
-        .isLength({min: 0, max: 500}).withMessage('Description must not be more than 500 characters long'),
+        .isLength({ max: 500 }).withMessage('Description must not be more than 500 characters long'),
     body('stockInHand')
         .trim()
         .isInt().withMessage('Stock Quantity must be a number'),
