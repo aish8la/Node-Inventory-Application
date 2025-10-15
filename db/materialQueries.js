@@ -101,7 +101,33 @@ async function getMaterialProtectStatus(materialId) {
         value: [materialId]
     }
     const result = await db.query(SQL);
-    return result.rows;
+    return result.rows[0];
+}
+
+async function getMaterialById(materialId) {
+    if (!materialId) return;
+    const SQL = {
+        text: `SELECT m.material_id, m.material_name, m.material_description, m.is_protected, m.stock_in_hand, mc.category_id, c.category_name
+                FROM materials m
+                LEFT JOIN material_categories mc
+                ON m.material_id = mc.material_id
+                LEFT JOIN categories c
+                ON mc.category_id = c.category_id
+                WHERE m.material_id = $1
+                ORDER BY m.material_id, mc.category_id;`,
+        values: [materialId]
+    }
+    const result = await db.query(SQL);
+    if (!result.rows[0]) return;
+    const materialData = {
+        material_id: result.rows[0].material_id,
+        material_name: result.rows[0].material_name,
+        material_description: result.rows[0].material_description,
+        is_protected: result.rows[0].is_protected,
+        stock_in_hand: result.rows[0].stock_in_hand,
+        categories: result.rows.map(row => ({ category_id: row.category_id, category_name: row.category_name }) ),
+    }
+    return materialData;
 }
 
 
@@ -110,4 +136,5 @@ module.exports = {
     getMaterialCategories,
     addMaterial,
     getMaterialProtectStatus,
+    getMaterialById,
 }
