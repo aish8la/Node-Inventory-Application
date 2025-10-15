@@ -91,8 +91,23 @@ async function getMaterialCategories() {
     return result.rows;
 }
 
+async function getMaterialProtectStatus(materialId) {
+    if (!materialId) return;
+    const SQL = {
+        text: `SELECT material_id, is_protected
+                FROM materials
+                WHERE material_id = $1
+                LIMIT 1;`,
+        value: [materialId]
+    }
+    const result = await db.query(SQL);
+    return result.rows;
+}
+
+
 module.exports = {
     getAllMaterials,
     getMaterialCategories,
     addMaterial,
+    getMaterialProtectStatus,
 }
