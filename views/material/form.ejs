@@ -13,6 +13,8 @@
         <% } %>
         <label for="material-name">Material Name</label>
         <input type="text" name="materialName" id="material-name" value="<%= mode === 'edit' ? formData.material_name : '' %>">
+        <label for="material-description">Material Description</label>
+        <input type="text" name="materialDescription" id="material-description" value="<%= mode === 'edit' ? formData.material_description : '' %>">
         <% if( formData.categoryList ) { %>
             <label for="categories">Categories</label>
             <select name="categories" id="categories" multiple>
@@ -22,6 +24,8 @@
                 <% }); %>
             </select>
         <% } %>
+        <label for="stock-in-hand">Stock In Hand</label>
+        <input type="number" name="stockInHand" id="stock-in-hand" value="<%= mode === 'edit' ? formData.stock_in_hand : '' %>">
         <label for="is-protected">Protected</label>
         <input type="checkbox" value="true" id="is-protected" name="isProtected" <%= formData.is_protected ? 'checked'  : '' %>>
         <% if ( mode === 'edit' && formData.is_protected ) { %>
