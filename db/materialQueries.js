@@ -64,8 +64,8 @@ async function addMaterial({ materialName, materialDescription, isProtected, sto
         const materialId = insertResult.rows[0].material_id;
 
         if (uniqueCategoryIds.length > 0) {
-            categoryInsertSQL.values[0](materialId);
-            categoryInsertSQL.values[1](uniqueCategoryIds);
+            categoryInsertSQL.values[0] = materialId;
+            categoryInsertSQL.values[1] = uniqueCategoryIds;
             const categoryResult = await client.query(categoryInsertSQL);
             if (categoryResult.rowCount !== uniqueCategoryIds.length) {
                 throw new Error('Failed to add category to material');
@@ -94,4 +94,5 @@ async function getMaterialCategories() {
 module.exports = {
     getAllMaterials,
     getMaterialCategories,
+    addMaterial,
 }
