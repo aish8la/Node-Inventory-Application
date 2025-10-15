@@ -1,5 +1,6 @@
 const db = require('../db/materialQueries');
 const { matchedData } = require('express-validator');
+const NotFoundError = require('../errors/NotFoundError');
 
 async function materialsGet(req, res) {
     const materials = await db.getAllMaterials();
@@ -48,8 +49,21 @@ async function newMaterialPost(req, res) {
     res.redirect('/material');
 }
 
+async function editMaterialGet(req, res) {
+    const { materialId } = req.params;
+    const materialData = await db.getMaterialById(materialId);
+    if (!materialData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
+    const categoryList = await db.getMaterialCategories();
+    res.render('material/form', {
+        subtitle: 'Fab Inventory | Edit Material',
+        mode: 'edit',
+        formData: {...materialData, categoryList},
+    });
+}
+
 module.exports = {
     materialsGet,
     newMaterialGet,
-    newMaterialPost
+    newMaterialPost,
+    editMaterialGet,
 };
