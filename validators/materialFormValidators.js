@@ -13,6 +13,10 @@ const addValidation = [
     body('stockInHand')
         .trim()
         .isInt().withMessage('Stock Quantity must be a number'),
+    body('categoriesId')
+        .toArray(),
+    body('isProtected')
+        .toBoolean()
 ];
 
 module.exports = {
