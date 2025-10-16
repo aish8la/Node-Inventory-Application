@@ -67,12 +67,23 @@ async function editMaterialPost(req, res) {
     if (!materialId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
     const validatedInput = matchedData(req, { locations: ['body'], onlyValidData: false });
     const categoryList = await db.getMaterialCategories();
-    if (res.validationErrors) {
+    const currentProtectStatus = await db.getMaterialProtectStatus(materialId);
+    const authorized = req?.authorized({
+        currentProtectStatus: currentProtectStatus.is_protected,
+        inputProtectStatus: validatedInput.isProtected,
+        inputPassword: req.body?.password,
+    });
+    if (res.validationErrors || !authorized) {
         return res.render('material/form', {
             subtitle: 'Fab Inventory | Edit Material',
             mode: 'edit',
-            formData: {...validatedInput, categoryList},
-            formErrors: res.validationErrors,
+            formData: {
+                ...validatedInput,
+                materialId,
+                categoryList,
+                passwordIsRequired: !authorized
+            },
+            formErrors: res?.validationErrors,
         });
     }
     await db.editMaterial({
