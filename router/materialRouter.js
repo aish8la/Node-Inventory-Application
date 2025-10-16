@@ -8,5 +8,6 @@ materialRouter.get('/', materialController.materialsGet);
 materialRouter.get('/new', materialController.newMaterialGet);
 materialRouter.post('/new', materialValidators.addValidation, validate, materialController.newMaterialPost);
 materialRouter.get('/:materialId/edit', materialValidators.paramValidation, validate, materialController.editMaterialGet);
+materialRouter.post('/:materialId/edit', materialValidators.editValidation, validate, materialController.editMaterialPost);
 
 module.exports = materialRouter;

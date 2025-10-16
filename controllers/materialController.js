@@ -62,9 +62,34 @@ async function editMaterialGet(req, res) {
     });
 }
 
+async function editMaterialPost(req, res) {
+    const { materialId } = matchedData(req, { locations: ['params'] });
+    if (!materialId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
+    const validatedInput = matchedData(req, { locations: ['body'], onlyValidData: false });
+    const categoryList = await db.getMaterialCategories();
+    if (res.validationErrors) {
+        return res.render('material/form', {
+            subtitle: 'Fab Inventory | Edit Material',
+            mode: 'edit',
+            formData: {...validatedInput, categoryList},
+            formErrors: res.validationErrors,
+        });
+    }
+    await db.editMaterial({
+        materialId: materialId,
+        materialName: validatedInput.materialName,
+        description: validatedInput.materialDescription,
+        isProtected: validatedInput.isProtected,
+        stockInHand: validatedInput.stockInHand,
+        categories: validatedInput.categoriesId,
+    });
+    res.redirect('/material');
+}
+
 module.exports = {
     materialsGet,
     newMaterialGet,
     newMaterialPost,
     editMaterialGet,
+    editMaterialPost,
 };
