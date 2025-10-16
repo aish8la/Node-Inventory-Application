@@ -28,10 +28,8 @@
         <input type="number" name="stockInHand" id="stock-in-hand" value="<%= mode === 'edit' ? formData.stock_in_hand : '' %>">
         <label for="is-protected">Protected</label>
         <input type="checkbox" value="true" id="is-protected" name="isProtected" <%= formData.is_protected ? 'checked'  : '' %>>
-        <% if ( mode === 'edit' && formData.is_protected ) { %>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password">
-        <% } %>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password">
         <button type="submit">Submit</button>
     </form>
 </body>
