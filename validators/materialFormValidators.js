@@ -23,7 +23,13 @@ const paramValidation = [
         .isInt().withMessage("Material Id must be an integer"),
 ]
 
+const editValidation = [
+    addValidation,
+    paramValidation
+];
+
 module.exports = {
     addValidation,
     paramValidation,
+    editValidation,
 };
