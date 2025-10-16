@@ -98,7 +98,7 @@ async function getMaterialProtectStatus(materialId) {
                 FROM materials
                 WHERE material_id = $1
                 LIMIT 1;`,
-        value: [materialId]
+        values: [materialId]
     }
     const result = await db.query(SQL);
     return result.rows[0];
