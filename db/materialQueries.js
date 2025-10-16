@@ -130,6 +130,59 @@ async function getMaterialById(materialId) {
     return materialData;
 }
 
+async function editMaterial({ materialId, materialName, description, isProtected, stockInHand, categories = [] } = {}) {
+    if(!materialId) return;
+
+    const editMaterialSQL = {
+        text: `UPDATE materials
+                SET material_name = $1,
+                    material_description = $2,
+                    is_protected = $3,
+                    stock_in_hand = $4
+                WHERE material_id = $5;`,
+        values: [materialName, description, isProtected, stockInHand, materialId],
+    };
+    const deleteExistingCategories = {
+        text: `DELETE FROM material_categories
+                WHERE material_id = $1`,
+        values: [materialId],
+    };
+
+    const client = await db.getClient();
+    try {
+        await client.query('BEGIN');
+        const editResult = await client.query(editMaterialSQL);
+        if (editResult.rowCount === 0) {
+            throw new Error('Failed to edit material');
+        }
+        await client.query(deleteExistingCategories);
+
+        if (categories.length > 0) {
+            const uniqueCategoryIds = [...new Set(categories)];
+            const editMaterialCategories = {
+                text: `INSERT INTO material_categories (material_id, category_id)
+                        SELECT $1, c.category_id 
+                        FROM categories c
+                        JOIN category_map cm
+                            ON c.category_for = cm.cat_map_id
+                        WHERE cm.cat_mapped_to = 'Material'
+                            AND c.category_id = ANY($2::int[]);
+                        `,
+                values: [materialId, uniqueCategoryIds],
+            };
+            const categoryResult = await client.query(editMaterialCategories);
+            if (categoryResult.rowCount !== uniqueCategoryIds.length) {
+                throw new Error('Failed to edit material category');
+            }
+        }
+        await client.query('COMMIT');
+    } catch(err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        await client.release();
+    }
+}
 
 module.exports = {
     getAllMaterials,
@@ -137,4 +190,5 @@ module.exports = {
     addMaterial,
     getMaterialProtectStatus,
     getMaterialById,
-}
+    editMaterial,
+};
