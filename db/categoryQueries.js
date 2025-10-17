@@ -37,7 +37,7 @@ async function getCategoryById(id) {
         values: [id]
     };
     const result = await db.query(getCategory)
-    return result.rows;
+    return result.rows[0];
 }
 
 async function editCategory({ categoryId, categoryName, categoryTypeId, isProtected }) {
