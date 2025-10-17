@@ -198,6 +198,17 @@ async function deleteMaterial(materialId) {
     }
 }
 
+async function materialIsUsed(materialId) {
+    const SQL = {
+        text: `SELECT 1
+                WHERE EXISTS (SELECT 1 FROM bill_of_materials WHERE material_id = $1);`,
+        values: [materialId],
+    };
+
+    const result = await db.query(SQL);
+    return result.rowCount > 0;
+}
+
 module.exports = {
     getAllMaterials,
     getMaterialCategories,
@@ -205,4 +216,5 @@ module.exports = {
     getMaterialById,
     editMaterial,
     deleteMaterial,
+    materialIsUsed,
 };
