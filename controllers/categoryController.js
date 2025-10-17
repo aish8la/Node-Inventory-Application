@@ -7,11 +7,14 @@ async function categoryGet(req, res) {
 }
 
 async function newCategoryGet(req, res) {
-    const categoryTypes = await db.getAllCategoryTypes();
+    const categoryTypeList = await db.getAllCategoryTypes();
+    const formData = {
+        categoryTypeList,
+    };
     res.render('category/form', {
-        categoryTypes: categoryTypes.rows,
+        subtitle: 'New Category',
         mode: 'new',
-        category: {}
+        formData,
     });
 }
 
