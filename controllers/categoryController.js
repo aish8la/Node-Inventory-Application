@@ -99,22 +99,41 @@ async function editCategoryPost(req, res) {
     res.redirect('/category');
 }
 
+async function deleteCategoryGet(req, res) {
+    const { categoryId } = matchedData(req, { locations: ['params'] });
+    if (!categoryId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
+    const categoryData = await db.getCategoryById(categoryId);
+    if (!categoryData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
+    res.render('confirmDelete', {
+        title: 'Fab Inventory | Delete Category',
+        path: req.baseUrl + '/' + categoryId + '/delete',
+        message: `Delete Category "${categoryData.category_name}"`,
+        isProtected: categoryData.is_protected,
+    });
+}
+
 async function deleteCategoryPost(req, res) {
-    const { categoryId } = req.params;
+    const { categoryId } = matchedData(req, { locations: ['params'] });
+    if (!categoryId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
+    const categoryData = await db.getCategoryById(categoryId);
+    const authorized = req?.authorized({
+        currentProtectStatus: categoryData.is_protected,
+        inputProtectStatus: false,
+        inputPassword: req.body?.password,
+    });
+    if (!authorized) {
+        return res.render('confirmDelete', {
+            title: 'Fab Inventory | Delete Category',
+            path: req.baseUrl + '/' + categoryId + '/delete',
+            message: `Delete Category "${categoryData.category_name}"`,
+            isProtected: categoryData.is_protected,
+            passwordIsRequired: !authorized
+        });
+    }
     await db.deleteCategory(categoryId);
     res.redirect('/category');
 }
 
-async function deleteCategoryGet(req, res) {
-    const { categoryId } = req.params;
-    const categoryData = await db.getCategoryById(categoryId);
-    res.render('confirmDelete', {
-        title: 'Fab Inventory | Delete Category',
-        path: req.baseUrl + '/' + categoryId + '/delete',
-        message: `Delete Category "${categoryData[0].category_name}"`,
-        isProtected: categoryData[0].is_protected,
-    });
-}
 
 module.exports = {
     categoryGet,
