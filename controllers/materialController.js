@@ -122,6 +122,14 @@ async function deleteMaterialPost(req, res) {
     if (!materialId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
     const materialData = await db.getMaterialById(materialId);
     if (!materialData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
+    const isInUse = await db.materialIsUsed(materialId);
+    if (isInUse) {
+        return res.render('deleteRestricted', {
+            title: 'Delete Restricted',
+            messageTitle: 'Delete Operation Failed',
+            message:'The item cannot be deleted because it is referenced by one or more other items. Please remove or update those references before deleting.'
+        });
+    }
     const authorized = req?.authorized({
         currentProtectStatus: materialData.is_protected,
         inputProtectStatus: false,
