@@ -30,6 +30,9 @@
         <input type="checkbox" value="true" id="is-protected" name="is_protected" <%= formData.is_protected ? 'checked'  : '' %>>
         <label for="password">Password</label>
         <input type="password" id="password" name="password">
+        <% if (locals?.formData?.passwordIsRequired) { %> 
+            <span><%= 'Valid Password is required' %></span>
+        <% } %>
         <button type="submit">Submit</button>
     </form>
 </body>
