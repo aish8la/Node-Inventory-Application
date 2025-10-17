@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fab Inventory | New Category</title>
+    <title>Fab Inventory | <%= subtitle %></title>
 </head>
 <body>
-    <form action="<%= mode === 'edit' ? '/category/' + category.category_id + '/edit' : '/category/new' %>" method="POST">
+    <form action="<%= mode === 'edit' ? '/category/' + formData.category_id + '/edit' : '/category/new' %>" method="POST">
         <%- include("../partials/formErrors.ejs") %>
         <% if (mode === 'edit') { %> 
-            <input type="hidden" id="categoryId" name="categoryId" value="<%= category.category_id %>">
+            <input type="hidden" id="categoryId" name="categoryId" value="<%= formData.category_id %>">
         <% } %>
         <label for="category-name">Category Name</label>
-        <input type="text" name="categoryName" id="category-name" value="<%= mode === 'edit' ? category.category_name : '' %>">
-        <% if( locals.categoryTypes ) { %>
+        <input type="text" name="category_name" id="category-name" value="<%= formData?.category_name || '' %>">
+        <% if( formData.categoryTypeList ) { %>
             <label for="category_type">Category Type</label>
-            <select name="categoryType" id="category_type">
-                <% categoryTypes.forEach(option => { %>
+            <select name="category_type" id="category_type">
+                <% formData.categoryTypeList.forEach(option => { %>
                     <option value="<%= option.cat_map_id %>"
-                        <%= option.cat_map_id === category.category_for ? 'selected' : '' %>>
+                        <%= option.cat_map_id === formData.category_for ? 'selected' : '' %>>
                     <%= option.cat_mapped_to %></option>
                 <% }); %>
             </select>
         <% } %>
         <label for="is-protected">Protected</label>
-        <input type="checkbox" value="true" id="is-protected" name="isProtected" <%= category.is_protected ? 'checked'  : '' %>>
-        <% if ( mode === 'edit' && category.is_protected ) { %>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password">
+        <input type="checkbox" value="true" id="is-protected" name="is_protected" <%= formData.is_protected ? 'checked'  : '' %>>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password">
+        <% if (locals?.formData?.passwordIsRequired) { %> 
+            <span><%= 'Valid Password is required' %></span>
         <% } %>
         <button type="submit">Submit</button>
     </form>
