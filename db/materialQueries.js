@@ -53,8 +53,6 @@ async function addMaterial({ materialName, materialDescription, isProtected, sto
         values: []
     }
 
-    const uniqueCategoryIds = [... new Set(categoriesId)];
-
     const client = await db.getClient();
 
     try {
@@ -63,7 +61,8 @@ async function addMaterial({ materialName, materialDescription, isProtected, sto
         if (insertResult.rowCount === 0) throw new Error('Failed to add material');
         const materialId = insertResult.rows[0].material_id;
 
-        if (uniqueCategoryIds.length > 0) {
+        if (categoriesId.length > 0) {
+            const uniqueCategoryIds = [... new Set(categoriesId.map(c => c.category_id))];
             categoryInsertSQL.values[0] = materialId;
             categoryInsertSQL.values[1] = uniqueCategoryIds;
             const categoryResult = await client.query(categoryInsertSQL);
@@ -145,7 +144,7 @@ async function editMaterial({ materialId, materialName, description, isProtected
         await client.query(deleteExistingCategories);
 
         if (categories.length > 0) {
-            const uniqueCategoryIds = [...new Set(categories)];
+            const uniqueCategoryIds = [... new Set(categories.map(c => c.category_id))];;
             const editMaterialCategories = {
                 text: `INSERT INTO material_categories (material_id, category_id)
                         SELECT $1, c.category_id 
