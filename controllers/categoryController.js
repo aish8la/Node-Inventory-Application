@@ -19,18 +19,33 @@ async function newCategoryGet(req, res) {
 }
 
 async function newCategoryPost(req, res) {
-    const categoryTypes = await db.getAllCategoryTypes();
-    if (res.validationErrors) {
+    const validatedInput = matchedData(req, {
+        onlyValidData: false,
+        locations: ['body'],
+    });
+    const authorized = req?.authorized({
+        currentProtectStatus: false,
+        inputProtectStatus: validatedInput.is_protected,
+        inputPassword: req.body?.password,
+    });
+    if (res.validationErrors || !authorized) {
+        const formData = {
+            ...validatedInput,
+            categoryTypeList: await db.getAllCategoryTypes(),
+            passwordIsRequired: !authorized
+        };
         return res.render('category/form', {
+            subtitle: 'New Category',
             mode: 'new',
-            formErrors: res.validationErrors,
-            categoryTypes: categoryTypes.rows,
-            category: {}
+            formData,
+            formErrors: res?.validationErrors,
         });
     }
-    const { categoryName, categoryType } = matchedData(req);
-    const isProtected = req.body.isProtected ? true : false;
-    await db.addCategory({ categoryName: categoryName, categoryFor: categoryType, isProtected: isProtected });
+    await db.addCategory({
+        categoryName: validatedInput.category_name,
+        categoryFor: validatedInput.category_type,
+        isProtected: validatedInput.is_protected
+    });
     res.redirect('/category');
 }
 
