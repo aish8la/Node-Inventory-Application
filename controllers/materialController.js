@@ -40,11 +40,11 @@ async function newMaterialPost(req, res) {
         });
     }
     await db.addMaterial({
-        materialName: validatedInput.materialName,
-        materialDescription: validatedInput.materialDescription,
-        stockInHand: validatedInput.stockInHand,
-        isProtected: validatedInput.isProtected,
-        categoriesId: validatedInput.categoriesId,
+        materialName: validatedInput.material_name,
+        materialDescription: validatedInput.material_description,
+        stockInHand: validatedInput.stock_in_hand,
+        isProtected: validatedInput.is_protected,
+        categoriesId: validatedInput.categories_id,
     });
     res.redirect('/material');
 }
@@ -70,7 +70,7 @@ async function editMaterialPost(req, res) {
     const currentProtectStatus = await db.getMaterialProtectStatus(materialId);
     const authorized = req?.authorized({
         currentProtectStatus: currentProtectStatus.is_protected,
-        inputProtectStatus: validatedInput.isProtected,
+        inputProtectStatus: validatedInput.is_protected,
         inputPassword: req.body?.password,
     });
     if (res.validationErrors || !authorized) {
@@ -79,7 +79,7 @@ async function editMaterialPost(req, res) {
             mode: 'edit',
             formData: {
                 ...validatedInput,
-                materialId,
+                material_id: materialId,
                 categoryList,
                 passwordIsRequired: !authorized
             },
@@ -88,11 +88,11 @@ async function editMaterialPost(req, res) {
     }
     await db.editMaterial({
         materialId: materialId,
-        materialName: validatedInput.materialName,
-        description: validatedInput.materialDescription,
-        isProtected: validatedInput.isProtected,
-        stockInHand: validatedInput.stockInHand,
-        categories: validatedInput.categoriesId,
+        materialName: validatedInput.material_name,
+        description: validatedInput.material_description,
+        isProtected: validatedInput.is_protected,
+        stockInHand: validatedInput.stock_in_hand,
+        categories: validatedInput.categories_id,
     });
     res.redirect('/material');
 }

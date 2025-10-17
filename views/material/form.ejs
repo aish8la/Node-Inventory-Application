@@ -9,15 +9,15 @@
     <form action="<%= mode === 'edit' ? '/material/' + formData.material_id + '/edit' : '/material/new' %>" method="POST">
         <%- include("../partials/formErrors.ejs") %>
         <% if (mode === 'edit') { %> 
-            <input type="hidden" id="materialId" name="materialId" value="<%= formData.material_id %>">
+            <input type="hidden" id="materialId" name="material_id" value="<%= formData.material_id %>">
         <% } %>
         <label for="material-name">Material Name</label>
-        <input type="text" name="materialName" id="material-name" value="<%= mode === 'edit' ? formData.material_name : '' %>">
+        <input type="text" name="material_name" id="material-name" value="<%= mode === 'edit' ? formData.material_name : '' %>">
         <label for="material-description">Material Description</label>
-        <input type="text" name="materialDescription" id="material-description" value="<%= mode === 'edit' ? formData.material_description : '' %>">
+        <input type="text" name="material_description" id="material-description" value="<%= mode === 'edit' ? formData.material_description : '' %>">
         <% if( formData.categoryList ) { %>
             <label for="categories">Categories</label>
-            <select name="categoriesId[]" id="categories" multiple>
+            <select name="categories_id[]" id="categories" multiple>
                 <% formData.categoryList.forEach(option => { %>
                     <option value="<%= option.category_id %>">
                     <%= option.category_name %></option>
@@ -25,9 +25,9 @@
             </select>
         <% } %>
         <label for="stock-in-hand">Stock In Hand</label>
-        <input type="number" name="stockInHand" id="stock-in-hand" value="<%= mode === 'edit' ? formData.stock_in_hand : '' %>">
+        <input type="number" name="stock_in_hand" id="stock-in-hand" value="<%= mode === 'edit' ? formData.stock_in_hand : '' %>">
         <label for="is-protected">Protected</label>
-        <input type="checkbox" value="true" id="is-protected" name="isProtected" <%= formData.is_protected ? 'checked'  : '' %>>
+        <input type="checkbox" value="true" id="is-protected" name="is_protected" <%= formData.is_protected ? 'checked'  : '' %>>
         <label for="password">Password</label>
         <input type="password" id="password" name="password">
         <button type="submit">Submit</button>
