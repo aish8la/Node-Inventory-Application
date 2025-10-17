@@ -67,20 +67,35 @@ async function editCategoryGet(req, res) {
 }
 
 async function editCategoryPost(req, res) {
-    const { categoryId } = req.params;
-    const categoryTypes = await db.getAllCategoryTypes();
+    const { categoryId } = matchedData(req, { locations: ['params'] });
+    if (!categoryId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
+    const validatedInput = matchedData(req, { locations: ['body'], onlyValidData: false });
+    const categoryTypeList = await db.getAllCategoryTypes();
     const categoryData = await db.getCategoryById(categoryId);
-    if (res.validationErrors) {
+    const authorized = req?.authorized({
+        currentProtectStatus: categoryData.is_protected,
+        inputProtectStatus: validatedInput.is_protected,
+        inputPassword: req.body?.password,
+    });
+    if (res.validationErrors || !authorized) {
         return res.render('category/form', {
+            subtitle: 'Edit Category',
             mode: 'edit',
-            formErrors: res.validationErrors,
-            categoryTypes: categoryTypes.rows,
-            category: categoryData[0],
+            formData: {
+                ...validatedInput,
+                category_id: categoryId,
+                categoryTypeList,
+                passwordIsRequired: !authorized
+            },
+            formErrors: res?.validationErrors,
         });
     }
-    const { categoryName, categoryType } = matchedData(req);
-    const isProtected = req.body.isProtected ? true : false;
-    await db.editCategory({ categoryId: categoryId, categoryName: categoryName, categoryTypeId: categoryType, isProtected: isProtected});
+    await db.editCategory({
+        categoryId: categoryId,
+        categoryName: validatedInput.category_name,
+        categoryTypeId: validatedInput.category_type,
+        isProtected: validatedInput.is_protected,
+    });
     res.redirect('/category');
 }
 
