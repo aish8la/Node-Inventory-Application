@@ -5,7 +5,7 @@ const NotFoundError = require('../errors/NotFoundError');
 async function materialsGet(req, res) {
     const materials = await db.getAllMaterials();
     res.render('material/list', {
-        title: 'Fab Inventory | Categories',
+        title: 'Fab Inventory | Materials',
         materials: materials,
     });
 }
@@ -16,7 +16,7 @@ async function newMaterialGet(req, res) {
         categoryList,
     };
     res.render('material/form', {
-        subtitle: 'Fab Inventory | New Material',
+        subtitle: 'New Material',
         mode: 'new',
         formData,
     });
@@ -39,7 +39,7 @@ async function newMaterialPost(req, res) {
             passwordIsRequired: !authorized
         }
         return res.render('material/form', {
-            subtitle: 'Fab Inventory | New Material',
+            subtitle: 'New Material',
             mode: 'new',
             formData,
             formErrors: res?.validationErrors,
@@ -62,7 +62,7 @@ async function editMaterialGet(req, res) {
     if (!materialData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
     const categoryList = await db.getMaterialCategories();
     res.render('material/form', {
-        subtitle: 'Fab Inventory | Edit Material',
+        subtitle: 'Edit Material',
         mode: 'edit',
         formData: {...materialData, categoryList},
     });
@@ -81,7 +81,7 @@ async function editMaterialPost(req, res) {
     });
     if (res.validationErrors || !authorized) {
         return res.render('material/form', {
-            subtitle: 'Fab Inventory | Edit Material',
+            subtitle: 'Edit Material',
             mode: 'edit',
             formData: {
                 ...validatedInput,
