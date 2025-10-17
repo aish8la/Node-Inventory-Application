@@ -10,6 +10,8 @@ const addValidation = [
         .trim()
         .isInt()
         .notEmpty().withMessage('Category Type cannot be empty'),
+    body('is_protected')
+        .toBoolean()
 ];
 
 const paramValidation = [
