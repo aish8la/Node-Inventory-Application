@@ -60,6 +60,17 @@ async function deleteCategory(id) {
     return result;
 }
 
+async function categoryIsUsed(categoryId) {
+    const SQL = {
+        text: `SELECT 1
+                WHERE EXISTS (SELECT 1 FROM material_categories WHERE category_id = $1)
+                    EXISTS (SELECT 1 FROM product_categories WHERE category_id = $1);`,
+        values: [categoryId],
+    }
+    const result = await db.query(SQL);
+    return result.rowCount > 0;
+}
+
 module.exports = {
     addCategory,
     getAllCategories,
@@ -67,4 +78,5 @@ module.exports = {
     getCategoryById,
     editCategory,
     deleteCategory,
+    categoryIsUsed,
 };
