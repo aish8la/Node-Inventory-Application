@@ -16,13 +16,15 @@
         <label for="material-description">Material Description</label>
         <input type="text" name="material_description" id="material-description" value="<%= formData?.material_description || '' %>">
         <% if( formData.categoryList ) { %>
-            <label for="categories">Categories</label>
-            <select name="categories_id[]" id="categories" multiple>
-                <% formData.categoryList.forEach(option => { %>
-                    <option value="<%= option.category_id %>">
-                    <%= option.category_name %></option>
+            <fieldset name="categories_id[]">
+                <legend>Categories</legend>
+                <% formData.categoryList.forEach(category => { %>
+                    <% const id = `CT-${category.category_id}` %>
+                    <% const selected = formData.categories.some( c => c.category_id === category.category_id ) ? "checked" : '' %>
+                    <input type="checkbox" value="<%= category.category_id %>" <%= selected %> id="<%= id %>">
+                    <label for="<%= id %>"><%= category.category_name %></label>
                 <% }); %>
-            </select>
+            </fieldset>
         <% } %>
         <label for="stock-in-hand">Stock In Hand</label>
         <input type="number" name="stock_in_hand" id="stock-in-hand" value="<%= formData?.stock_in_hand || '' %>">
