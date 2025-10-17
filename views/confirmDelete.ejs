@@ -13,6 +13,9 @@
             <label for="password">Password</label>
             <input type="password" name="password" id="password">
         <% } %>
+        <% if (locals?.passwordIsRequired) { %> 
+            <span><%= 'Valid Password is required' %></span>
+        <% } %>
         <button id="back-button" type="button" onclick="history.back(); return false;">Back</button>
         <button type="submit">Delete</button>
     </form>
