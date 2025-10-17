@@ -184,6 +184,33 @@ async function editMaterial({ materialId, materialName, description, isProtected
     }
 }
 
+async function deleteMaterial(materialId) {
+    const materialDeleteSQL = {
+        text: `DELETE FROM materials
+                WHERE material_id = $1;`,
+        values: [materialId],
+    };
+    const categoryDeleteSQL = {
+        text: `DELETE FROM material_categories
+                WHERE material_id = $1;`,
+        values: [materialId],
+    }
+
+    const client = await db.getClient();
+
+    try {
+        await client.query('BEGIN');
+        await client.query(categoryDeleteSQL);
+        await client.query(materialDeleteSQL);
+        await client.query('COMMIT');
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        await client.release();
+    }
+}
+
 module.exports = {
     getAllMaterials,
     getMaterialCategories,
@@ -191,4 +218,5 @@ module.exports = {
     getMaterialProtectStatus,
     getMaterialById,
     editMaterial,
+    deleteMaterial,
 };
