@@ -63,7 +63,7 @@ async function deleteCategory(id) {
 async function categoryIsUsed(categoryId) {
     const SQL = {
         text: `SELECT 1
-                WHERE EXISTS (SELECT 1 FROM material_categories WHERE category_id = $1)
+                WHERE EXISTS (SELECT 1 FROM material_categories WHERE category_id = $1) OR
                     EXISTS (SELECT 1 FROM product_categories WHERE category_id = $1);`,
         values: [categoryId],
     }
