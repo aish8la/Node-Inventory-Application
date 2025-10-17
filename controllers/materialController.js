@@ -103,10 +103,24 @@ async function editMaterialPost(req, res) {
     res.redirect('/material');
 }
 
+async function deleteMaterialGet(req, res) {
+    const { materialId } = matchedData(req, { locations: ['params'] });
+    if (!materialId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
+    const materialData = await db.getMaterialById(materialId);
+    if (!materialData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
+    res.render('confirmDelete', {
+        title: 'Fab Inventory | Delete Material',
+        path: req.baseUrl + '/' + materialId + '/delete',
+        message: `Delete Material "${materialData.material_name}"`,
+        isProtected: materialData.is_protected,
+    });
+}
+
 module.exports = {
     materialsGet,
     newMaterialGet,
     newMaterialPost,
     editMaterialGet,
     editMaterialPost,
+    deleteMaterialGet,
 };
