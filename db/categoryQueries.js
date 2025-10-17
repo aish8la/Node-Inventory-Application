@@ -6,28 +6,25 @@ async function addCategory({ categoryName, categoryFor, isProtected = false}) {
                 VALUES ($1, $2, $3);`,
         values: [categoryName, categoryFor, isProtected]
     };
-    try {
-        const result = await db.query(addCategorySQL);
-        return result;
-    } catch (error) {
-        throw error;
-    }
+    const result = await db.query(addCategorySQL);
+    return result;
 }
 
 async function getAllCategories() {
     const viewCategorySQL = `SELECT ct.category_id, ct.category_name, ct.category_for, cmt.cat_mapped_to, ct.is_protected
                                 FROM categories AS ct 
                                 LEFT OUTER JOIN category_map AS cmt 
-                                ON ct.category_for = cmt.cat_map_id;`
+                                ON ct.category_for = cmt.cat_map_id
+                            ORDER BY ct.category_id;`
     const result = await db.query(viewCategorySQL);
-    return result.rows
+    return result.rows;
 }
 
 async function getAllCategoryTypes() {
     const getCategoryTypes = `SELECT cat_map_id, cat_mapped_to
                                 FROM category_map;`
     const result = await db.query(getCategoryTypes);
-    return result;
+    return result.rows;
 }
 
 async function getCategoryById(id) {
