@@ -116,6 +116,28 @@ async function deleteMaterialGet(req, res) {
     });
 }
 
+async function deleteMaterialPost(req, res) {
+    const { materialId } = matchedData(req, { locations: ['params'] });
+    if (!materialId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
+    const materialData = await db.getMaterialById(materialId);
+    const authorized = req?.authorized({
+        currentProtectStatus: materialData.is_protected,
+        inputProtectStatus: false,
+        inputPassword: req.body?.password,
+    });
+    if (!authorized) {
+        return res.render('confirmDelete', {
+            title: 'Fab Inventory | Delete Material',
+            path: req.baseUrl + '/' + materialId + '/delete',
+            message: `Delete Material "${materialData.material_name}"`,
+            isProtected: materialData.is_protected,
+            passwordIsRequired: !authorized
+        });
+    }
+    await db.deleteMaterial(materialId);
+    res.redirect('/material');
+}
+
 module.exports = {
     materialsGet,
     newMaterialGet,
@@ -123,4 +145,5 @@ module.exports = {
     editMaterialGet,
     editMaterialPost,
     deleteMaterialGet,
+    deleteMaterialPost,
 };
