@@ -18,10 +18,10 @@
         <% if( formData.categoryList ) { %>
             <fieldset>
                 <legend>Categories</legend>
-                <% formData.categoryList.forEach(category => { %>
+                <% formData.categoryList.forEach( (category, index) => { %>
                     <% const id = `CT-${category.category_id}` %>
                     <% const selected = formData.categories.some( c => c.category_id === category.category_id ) ? "checked" : '' %>
-                    <input type="checkbox" value="<%= category.category_id %>" <%= selected %> id="<%= id %>" name="categories_id[]">
+                    <input type="checkbox" value="<%= category.category_id %>" <%= selected %> id="<%= id %>" name="categories_id[<%=index %>][category_id]">
                     <label for="<%= id %>"><%= category.category_name %></label>
                 <% }); %>
             </fieldset>
