@@ -69,9 +69,10 @@ async function editCategoryGet(req, res) {
 async function editCategoryPost(req, res) {
     const { categoryId } = matchedData(req, { locations: ['params'] });
     if (!categoryId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
+    const categoryData = await db.getCategoryById(categoryId);
+    if (!categoryData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
     const validatedInput = matchedData(req, { locations: ['body'], onlyValidData: false });
     const categoryTypeList = await db.getAllCategoryTypes();
-    const categoryData = await db.getCategoryById(categoryId);
     const authorized = req?.authorized({
         currentProtectStatus: categoryData.is_protected,
         inputProtectStatus: validatedInput.is_protected,
@@ -116,6 +117,7 @@ async function deleteCategoryPost(req, res) {
     const { categoryId } = matchedData(req, { locations: ['params'] });
     if (!categoryId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
     const categoryData = await db.getCategoryById(categoryId);
+    if (!categoryData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
     const authorized = req?.authorized({
         currentProtectStatus: categoryData.is_protected,
         inputProtectStatus: false,

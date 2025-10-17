@@ -72,10 +72,11 @@ async function editMaterialPost(req, res) {
     const { materialId } = matchedData(req, { locations: ['params'] });
     if (!materialId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
     const validatedInput = matchedData(req, { locations: ['body'], onlyValidData: false });
+    const materialData = await db.getMaterialById(materialId);
+    if (!materialData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
     const categoryList = await db.getMaterialCategories();
-    const currentProtectStatus = await db.getMaterialProtectStatus(materialId);
     const authorized = req?.authorized({
-        currentProtectStatus: currentProtectStatus.is_protected,
+        currentProtectStatus: materialData.is_protected,
         inputProtectStatus: validatedInput.is_protected,
         inputPassword: req.body?.password,
     });
@@ -120,6 +121,7 @@ async function deleteMaterialPost(req, res) {
     const { materialId } = matchedData(req, { locations: ['params'] });
     if (!materialId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
     const materialData = await db.getMaterialById(materialId);
+    if (!materialData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
     const authorized = req?.authorized({
         currentProtectStatus: materialData.is_protected,
         inputProtectStatus: false,
