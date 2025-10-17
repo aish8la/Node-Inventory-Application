@@ -1,5 +1,6 @@
 const { matchedData } = require('express-validator');
 const db = require('../db/categoryQueries');
+const NotFoundError = require('../errors/NotFoundError');
 
 async function categoryGet(req, res) {
     const categories = await db.getAllCategories();
@@ -50,13 +51,18 @@ async function newCategoryPost(req, res) {
 }
 
 async function editCategoryGet(req, res) {
-    const { categoryId } = req.params;
+    const { categoryId } = matchedData(req, { locations: ['params'] });
+    if (!categoryId) throw new NotFoundError('Oops! The page you are looking for does not exist.');
     const categoryData = await db.getCategoryById(categoryId);
-    const categoryTypes = await db.getAllCategoryTypes();
+    if (!categoryData) throw new NotFoundError('Oops! The item you are looking for does not exist.');
+    const categoryTypeList = await db.getAllCategoryTypes();
     res.render('category/form', {
+        subtitle: 'Edit Category',
         mode: 'edit',
-        category: categoryData[0],
-        categoryTypes: categoryTypes.rows
+        formData: {
+            ...categoryData,
+            categoryTypeList
+        },
     });
 }
 
