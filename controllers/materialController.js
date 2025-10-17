@@ -50,7 +50,7 @@ async function newMaterialPost(req, res) {
         materialDescription: validatedInput.material_description,
         stockInHand: validatedInput.stock_in_hand,
         isProtected: validatedInput.is_protected,
-        categoriesId: validatedInput.categories_id,
+        categoriesId: validatedInput.categories,
     });
     res.redirect('/material');
 }
@@ -99,7 +99,7 @@ async function editMaterialPost(req, res) {
         description: validatedInput.material_description,
         isProtected: validatedInput.is_protected,
         stockInHand: validatedInput.stock_in_hand,
-        categories: validatedInput.categories_id,
+        categories: validatedInput.categories,
     });
     res.redirect('/material');
 }

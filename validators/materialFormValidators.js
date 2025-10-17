@@ -12,7 +12,7 @@ const addValidation = [
     body('stock_in_hand')
         .trim()
         .isInt().withMessage('Stock Quantity must be a number'),
-    body('categories_id')
+    body('categories')
         .toArray(),
     body('is_protected')
         .toBoolean()
