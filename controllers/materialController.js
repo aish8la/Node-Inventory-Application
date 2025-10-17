@@ -27,16 +27,22 @@ async function newMaterialPost(req, res) {
         onlyValidData: false,
         locations: ['body'],
     });
-    if (res.validationErrors) {
+    const authorized = req?.authorized({
+        currentProtectStatus: false,
+        inputProtectStatus: validatedInput.is_protected,
+        inputPassword: req.body?.password,
+    });
+    if (res.validationErrors || !authorized) {
         const formData = {
             ...validatedInput,
-            categoryList: await db.getMaterialCategories()
+            categoryList: await db.getMaterialCategories(),
+            passwordIsRequired: !authorized
         }
         return res.render('material/form', {
             subtitle: 'Fab Inventory | New Material',
             mode: 'new',
             formData,
-            formErrors: res.validationErrors,
+            formErrors: res?.validationErrors,
         });
     }
     await db.addMaterial({

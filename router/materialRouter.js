@@ -7,7 +7,7 @@ const { auth } = require('../middleware/auth');
 
 materialRouter.get('/', materialController.materialsGet);
 materialRouter.get('/new', materialController.newMaterialGet);
-materialRouter.post('/new', materialValidators.addValidation, validate, materialController.newMaterialPost);
+materialRouter.post('/new', materialValidators.addValidation, validate, auth, materialController.newMaterialPost);
 materialRouter.get('/:materialId/edit', materialValidators.paramValidation, validate, materialController.editMaterialGet);
 materialRouter.post('/:materialId/edit', materialValidators.editValidation, validate, auth, materialController.editMaterialPost);
 
