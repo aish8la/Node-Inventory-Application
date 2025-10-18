@@ -105,13 +105,22 @@ async function getMaterialById(materialId) {
     }
     const result = await db.query(SQL);
     if (!result.rows[0]) return;
+    const categories = []
+    result.rows.forEach( row => {
+        if (row.category_id) {
+            categories.push({
+                category_id: row.category_id,
+                category_name: row.category_name,
+            });
+        } 
+    });
     const materialData = {
         material_id: result.rows[0].material_id,
         material_name: result.rows[0].material_name,
         material_description: result.rows[0].material_description,
         is_protected: result.rows[0].is_protected,
         stock_in_hand: result.rows[0].stock_in_hand,
-        categories: result.rows.map(row => ({ category_id: row.category_id, category_name: row.category_name }) ),
+        categories: categories,
     }
     return materialData;
 }
